@@ -5,8 +5,11 @@
 #alert ip any 80 <> $HOME_NET any (msg: "Possible WEB Brute Force Attack"; flow: established, to_server; threshold: type both, track by_src, count 40, seconds 5; classtype:attempted-admin; sid: 10000007; rev: 1;)
 
 
-#detecter scans verticales TCP
-alert tcp $EXTERNAL_NET ![22,25,80,110,143,389,443] -> $HOME_NET ![22,25,80,110,143,389,443] (msg: "Possible nmap vertical -sT attack"; flags:S; threshold: type both, track by_src, count 1000, seconds 10; flow: to_server; classtype:attempted-recon; sid:10000008;rev:1;)
+#detecter scans verticales TCP -sT
+alert tcp $EXTERNAL_NET ![22,25,80,110,143,389,443] -> $HOME_NET ![22,25,80,110,143,389,443] (msg: "Possible nmap vertical -sT attack"; flags:S; threshold: type both, track by_src, count 1000, seconds 5; flow: to_server; classtype:attempted-recon; sid:10000008;rev:1;)
+
+#detecter scans verticales TCP -sS
+alert tcp $EXTERNAL_NET ![22,25,80,110,143,389,443] -> $HOME_NET ![22,25,80,110,143,389,443] (msg: "Possible nmap vertical -sS attack"; flags:S; threshold: type both, track by_src, count 1000, seconds 5; flow: to_server; classtype:attempted-recon; sid:11000008;rev:1;)
 
 #detecter scans verticales UDP
 alert udp $EXTERNAL_NET ![80,443] -> $HOME_NET ![80,443] (msg: "Possible nmap -sU vertical attack"; threshold: type both, track by_src, count 1000, seconds 5; classtype:attempted-recon; sid:10000011;rev:1;)
