@@ -22,5 +22,10 @@ RUN mkdir /opt/zeek/share/zeek/policy/protocols/dnstunnel
 # moving the custom script into the container
 COPY /main.zeek /opt/zeek/share/zeek/policy/protocols/dnstunnel
 
+# TODO: Write code to install the analyzer and to enable the custom script using echo
+
+RUN /opt/zeek/bin/zkg install /DNSAnomalies
+RUN echo "@load protocols/dnstunnel/main" >> /opt/zeek/share/zeek/site/local.zeek
+
 # Informs Docker that a specific port is used by the application running inside the container
 EXPOSE 2752

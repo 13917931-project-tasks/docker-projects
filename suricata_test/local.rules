@@ -6,19 +6,19 @@
 
 
 #detecter scans verticales TCP -sT
-alert tcp $EXTERNAL_NET ![22,25,80,110,143,389,443] -> $HOME_NET ![22,25,80,110,143,389,443] (msg: "Possible nmap vertical -sT attack"; flags:S; threshold: type both, track by_src, count 1000, seconds 5; flow: to_server; classtype:attempted-recon; sid:10000008;rev:1;)
+alert tcp $EXTERNAL_NET ![22,25,53,80,110,143,389,443] -> $HOME_NET ![22,25,53,80,110,143,389,443] (msg: "Possible nmap vertical -sT attack"; flags:S; threshold: type both, track by_src, count 1000, seconds 5; flow: to_server; classtype:attempted-recon; sid:10000008;rev:1;)
 
 #detecter scans verticales TCP -sS
-alert tcp $EXTERNAL_NET ![22,25,80,110,143,389,443] -> $HOME_NET ![22,25,80,110,143,389,443] (msg: "Possible nmap vertical -sS attack"; flags:S; threshold: type both, track by_src, count 1000, seconds 5; flow: to_server; classtype:attempted-recon; sid:11000008;rev:1;)
+alert tcp $EXTERNAL_NET ![22,25,53,80,110,143,389,443] -> $HOME_NET ![22,25,53,80,110,143,389,443] (msg: "Possible nmap vertical -sS attack"; flags:S; threshold: type both, track by_src, count 1000, seconds 5; flow: to_server; classtype:attempted-recon; sid:11000008;rev:1;)
 
 #detecter scans verticales UDP
-alert udp $EXTERNAL_NET ![80,443] -> $HOME_NET ![80,443] (msg: "Possible nmap -sU vertical attack"; threshold: type both, track by_src, count 1000, seconds 5; classtype:attempted-recon; sid:10000011;rev:1;)
+alert udp $EXTERNAL_NET ![22,25,53,80,110,143,389,443] -> $HOME_NET ![22,25,53,80,110,143,389,443] (msg: "Possible nmap -sU vertical attack"; threshold: type both, track by_src, count 1000, seconds 5; classtype:attempted-recon; sid:10000011;rev:1;)
 
 #detecter scans horizontales TCP (nmap -sT)
-alert tcp $EXTERNAL_NET ![80,443] -> $HOME_NET ![80,443] (msg: "Possible nmap -sT horizontal scan"; flow: to_server, stateless, no_stream; flags:S; window:64240; tcp.mss: 1460; seq: 0;dsize:0; threshold: type both, track by_src, count 1, seconds 15; classtype:attempted-recon; priority: 1;sid:11000020; rev:1;)
+alert tcp $EXTERNAL_NET ![22,25,53,80,110,143,389,443] -> $HOME_NET ![22,25,53,80,110,143,389,443] (msg: "Possible nmap -sT horizontal scan"; flow: to_server, stateless, no_stream; flags:S; window:64240; tcp.mss: 1460; seq: 0;dsize:0; threshold: type both, track by_src, count 1, seconds 15; classtype:attempted-recon; priority: 1;sid:11000020; rev:1;)
 
 #detecter scans horizontales TCP (nmap -sS)
-alert tcp $EXTERNAL_NET ![80,443] -> $HOME_NET ![80,443] (msg: "Possible nmap -sS horizontal scan";flow: to_server, stateless, no_stream; flags:S; window:1024;tcp.mss:1460; dsize:0; threshold: type both, track by_src, count 1, seconds 15; classtype:attempted-recon;sid:10000021; priority:1; rev:1;)
+alert tcp $EXTERNAL_NET ![22,25,53,80,110,143,389,443] -> $HOME_NET ![22,25,53,80,110,143,389,443] (msg: "Possible nmap -sS horizontal scan";flow: to_server, stateless, no_stream; flags:S; window:1024;tcp.mss:1460; dsize:0; threshold: type both, track by_src, count 1, seconds 15; classtype:attempted-recon;sid:10000021; priority:1; rev:1;)
 
 #detecter scans horizontales UDP (nmap -sU)
 alert udp any ![80,443] -> any ![80,443] (msg: "Possible nmap -sU horizontal scan"; flow:to_server, stateless; dsize:0; threshold: type limit, track by_src, count 1, seconds 15; classtype:attempted-recon; sid:10000124; priority:1; rev:1;)
