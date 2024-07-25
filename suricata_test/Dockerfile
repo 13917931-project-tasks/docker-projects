@@ -24,7 +24,8 @@ COPY /local.rules /usr/share/suricata/rules
 COPY /nmap-scans.rules /usr/share/suricata/rules/
 
 RUN cd /etc && mkdir suricata
-COPY /rules /usr/share/suricata/rules/
+COPY /emerging.rules.tar.gz /
+RUN tar xzvf /emerging.rules.tar.gz && cp -r /rules/* /usr/share/suricata/rules/ 
 RUN cp -r /suricata-7.0.6/suricata.yaml /etc/suricata/
 RUN cp -r /suricata-7.0.6/threshold.config /etc/suricata
 RUN cp -r /usr/share/suricata/reference.config /etc/suricata
