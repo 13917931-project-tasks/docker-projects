@@ -1,7 +1,7 @@
 #Importing databases
-#FROM alpine:3.20.1
+FROM alpine:3.20.1
 
-FROM ubuntu
+#FROM ubuntu
 
 FROM python:3.11
 
@@ -34,6 +34,21 @@ RUN cp -r /usr/share/suricata/classification.config /etc/suricata
 RUN rm -rf /usr/lib/suricata/python/suricata/update/configs/update.yaml
 COPY update.yaml /etc/suricata
 RUN cd /var/log && mkdir suricata
+RUN echo 1000013 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2231000 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2100528 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2400021 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2400015 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2400002 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2010935 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2010939 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2010936 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2010936 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2002911 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2010937 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2002910 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+
+
 #RUN suricata-udpate
 # modbus and dnp3 between the lines 1120 and 1160 -> turn to yes
 #RUN suricata -T
