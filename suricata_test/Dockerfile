@@ -34,6 +34,9 @@ RUN cp -r /usr/share/suricata/classification.config /etc/suricata
 RUN rm -rf /usr/lib/suricata/python/suricata/update/configs/update.yaml
 COPY update.yaml /etc/suricata
 RUN cd /var/log && mkdir suricata
+
+#disabling rules that can generate fake positives
+RUN echo " " >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 1000013 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2231000 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2100528 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
@@ -48,6 +51,24 @@ RUN echo 2002911 >> /usr/lib/suricata/python/suricata/update/configs/disable.con
 RUN echo 2010937 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2002910 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 
+RUN suricata-update
+#creates suricata.rules file
+RUN sed -i '/^af-packet:/ {n; s/^/#/;}' /etc/suricata/suricata.yaml
+#comment the default interface for af-packet
+RUN sed -i '/^pcap:/ {n; s/^/#/;}' /etc/suricata/suricata.yaml
+#comment the default interface for pcap
+RUN sed -i '/^af-packet:/a\#my_example' /etc/suricata/suricata.yaml
+#creates a variable used to add new interfaces
+RUN sed -i '/^pcap:/a\#my_example' /etc/suricata/suricata.yaml
+#creates a variable used to add new interfaces
+RUN sed -i '/^#my_example/a\  - inteface: nettap1-eth2' /etc/suricata/suricata.yaml
+#adding a new interface to suricata
+RUN sed -i '/address-groups:/ {n; s/^/#/;}' /etc/suricata/suricata.yaml
+#comment the default HOME_NET
+RUN sed -i '/address-groups:/a\    HOME_NET: "[10.0.0.0/24]"' /etc/suricata/suricata.yaml
+#adds a new HOME_NET
+
+#CMD ["/etc/suricata/suricata.yaml"]
 
 #RUN suricata-udpate
 # modbus and dnp3 between the lines 1120 and 1160 -> turn to yes
