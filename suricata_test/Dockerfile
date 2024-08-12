@@ -66,7 +66,7 @@ RUN cd guardian-1.7 && cp guardian.pl /usr/local/bin/ && cp scripts/sdnips_block
 ##TODO: configure HostIPaddr in guardian.conf
 
 #activate guardian
-#/usr/local/bin/guardian.pl -c /etc/guardian.conf 
+#ENTRYPOINT ["/usr/local/bin/guardian.pl", "-c", "/etc/guardian.conf"] 
 #see guardian's logs
 #tail /var/log/guardian.log 
 

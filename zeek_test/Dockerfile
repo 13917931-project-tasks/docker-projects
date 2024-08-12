@@ -28,11 +28,17 @@ RUN apt-get update && apt-get install -y cmake
 RUN pip install --upgrade pip
 RUN python3.11 -m pip install GitPython semantic-version
 
+#installing the custom analyzer
 RUN /opt/zeek/bin/zkg install --force DNSAnomalies/
+#configuring zeek to recognize the custom script
+RUN echo " " >> /opt/zeek/share/zeek/site/local.zeek
 RUN echo "@load protocols/dnstunnel/main" >> /opt/zeek/share/zeek/site/local.zeek
 
-RUN export PATH=/opt/zeek/bin:$PATH
-RUN cd /DNSAnomalies/analyzer && rm -rf dnsanomalies.hlto && /opt/zeek/bin/spicyz -o dnsanomalies.hlto dnsanomalies.spicy dnsanomalies.evt 
+RUN export PATH=/opt/zeek/bin:$PATH && cd /DNSAnomalies/analyzer && rm -rf dnsanomalies.hlto && /opt/zeek/bin/spicyz -o dnsanomalies.hlto dnsanomalies.spicy dnsanomalies.evt 
+
+#configuring the interface
+RUN sed -i 's/^interface=eth0/interface=nettap1-eth2/' /opt/zeek/etc/node.cfg
+
 #RUN zkg install /DNSAnomalies
 # Informs Docker that a specific port is used by the application running inside the container
 #EXPOSE 2752
