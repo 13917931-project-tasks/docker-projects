@@ -22,6 +22,7 @@ RUN apt-get install && pip install pyyaml
 #Copying custom and community created rules into the container
 COPY /local.rules /usr/share/suricata/rules
 COPY /nmap-scans.rules /usr/share/suricata/rules/
+COPY /suricata-misp.rules /usr/share/suricata/rules/
 
 RUN cd /etc && mkdir suricata
 COPY /emerging.rules.tar.gz /
