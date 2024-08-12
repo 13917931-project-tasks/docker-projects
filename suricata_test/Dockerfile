@@ -35,7 +35,7 @@ RUN rm -rf /usr/lib/suricata/python/suricata/update/configs/update.yaml
 COPY update.yaml /etc/suricata
 RUN cd /var/log && mkdir suricata
 
-#disabling rules that can generate fake positives
+#disabling rules that can generate false positives
 RUN echo " " >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 1000013 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2231000 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
@@ -50,9 +50,26 @@ RUN echo 2010936 >> /usr/lib/suricata/python/suricata/update/configs/disable.con
 RUN echo 2002911 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2010937 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2002910 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+#maybe disable this one --> RUN echo 2100366 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 
-RUN suricata-update
-#creates suricata.rules file
+#setting guradian
+COPY guardian-1.7 /guardian-1.7
+RUN cd guardian-1.7/ && cp guardian.conf /etc/ 
+#defining the suricata file which will be analyzed by guardian
+RUN sed -i 's@/var/adm/secure@/var/log/suricata/eve.json@g' /etc/guardian.conf
+#defining controller's IP
+RUN sed -i 's@X.X.X.X@127.0.0.1@g' /etc/guardian.conf 
+#defining the interface which will be analyzed
+RUN sed -i 's/Interface       eth0/Interface       nettap1-eth2/' /etc/guardian.conf
+#configuring the files which will be used by guardian to block and unblock hosts
+RUN cd guardian-1.7 && cp guardian.pl /usr/local/bin/ && cp scripts/sdnips_block.sh /usr/local/bin/guardian_block.sh && cp scripts/sdnips_unblock.sh /usr/local/bin/guardian_unblock.sh 
+##TODO: configure HostIPaddr in guardian.conf
+
+#activate guardian
+#/usr/local/bin/guardian.pl -c /etc/guardian.conf 
+#see guardian's logs
+#tail /var/log/guardian.log 
+
 RUN sed -i '/^af-packet:/ {n; s/^/#/;}' /etc/suricata/suricata.yaml
 #comment the default interface for af-packet
 RUN sed -i '/^pcap:/ {n; s/^/#/;}' /etc/suricata/suricata.yaml
@@ -67,6 +84,8 @@ RUN sed -i '/address-groups:/ {n; s/^/#/;}' /etc/suricata/suricata.yaml
 #comment the default HOME_NET
 RUN sed -i '/address-groups:/a\    HOME_NET: "[10.0.0.0/24]"' /etc/suricata/suricata.yaml
 #adds a new HOME_NET
+RUN suricata-update
+#creates suricata.rules file
 
 #CMD ["/etc/suricata/suricata.yaml"]
 
