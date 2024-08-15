@@ -51,6 +51,8 @@ RUN echo 2010936 >> /usr/lib/suricata/python/suricata/update/configs/disable.con
 RUN echo 2002911 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2010937 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 RUN echo 2002910 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2210044 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
+RUN echo 2013504 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 #maybe disable this one --> RUN echo 2100366 >> /usr/lib/suricata/python/suricata/update/configs/disable.conf
 
 #setting guradian
